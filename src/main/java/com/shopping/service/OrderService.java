@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -83,6 +84,28 @@ public class OrderService {
         }
         // 페이징 구현 객체를 반환합니다.
         return new PageImpl<OrderHistDto>(orderHistDtos, pageable, totalCount);
+    }
+
+    // 로그인한 사람이 실제 주문자인지 체크합니다.
+    public boolean validateOrder(Long orderId, String email) {
+        // curMember) 로그인한 사람 정보
+        Member curMember = memberRepository.findByEmail(email);
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        Member savedMember = order.getMember();     // 주문자의 정보
+
+        // 로그인 한 사람의 이메일과 주문자의 이메일 정보가 동일하면 true
+        return StringUtils.equals(curMember.getEmail(), savedMember.getEmail());
+//        if(StringUtils.equals(curMember.getEmail(), savedMember.getEmail())) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+    }
+
+    // 주문 id를 이용하여 주문 객체를 찾고, 이에 대하여  주문 취소 상태로 변겅합니다.
+    public void cancelOder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
+        order.cancelOrder();
     }
 }
 

@@ -1,6 +1,7 @@
 package com.shopping.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -8,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 WebMvcConfigurer
     스프링 MVC를 위아혀 자바 기반의 구성 설정을 도와 주는 유틸리티 인터페이스
 */
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Value("${uploadPath}") // from application.properties
     String uploadPath ;
