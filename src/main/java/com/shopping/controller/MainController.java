@@ -23,6 +23,13 @@ public class MainController {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3) ;
         Page<MainItemDto> items = itemService.getMainItemPage(itemSearchDto, pageable) ;
 
+        // 검색 조건에 null이 아닌 문자열 "null"이 넘어 오는 경우가 있으므로 추가 요망
+        if(itemSearchDto.getSearchQuery() != null){
+            if(itemSearchDto.getSearchQuery().equals("null")){
+                itemSearchDto.setSearchQuery(null);
+            }
+        }
+
         model.addAttribute("items", items) ;
         model.addAttribute("itemSearchDto", itemSearchDto) ;
         model.addAttribute("maxPage", 5) ;
